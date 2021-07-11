@@ -22,14 +22,13 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef BIG_BRAINPAD_H
-#define BIG_BRAINPAD_H
+#ifndef MEOWBIT_H
+#define MEOWBIT_H
 
 #include "CodalHeapAllocator.h"
 #include "codal-core/inc/types/Event.h"
 #include "CodalDevice.h"
 #include "ErrorNo.h"
-// #include "ZTimer.h"
 #include "CodalCompat.h"
 #include "CodalComponent.h"
 #include "CodalDmesg.h"
@@ -39,9 +38,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include "Button.h"
 #include "MultiButton.h"
-//#include "MbedI2C.h"
-//#include "MbedSerial.h"
-#include "BrainPadIO.h"
+#include "MeowbitIO.h"
 #include "CodalFiber.h"
 #include "MessageBus.h"
 
@@ -53,47 +50,53 @@ DEALINGS IN THE SOFTWARE.
 #include "ZSPI.h"
 #include "STMLowLevelTimer.h"
 
+#include "SPIScreenIO.h"
+#include "ST7735.h"
+
+
 // Status flag values
 #define DEVICE_INITIALIZED                    0x01
 
 /**
- * Class definition for a MicroBit device.
+ * Class definition for a Meowbit device.
  *
  * Represents the device as a whole, and includes member variables that represent various device drivers
- * used to control aspects of the micro:bit.
+ * used to control aspects of the Kittenbot Meowbit.
  */
 namespace codal
 {
-    class BrainPad : public CodalComponent
+    class Meowbit : public CodalComponent
     {
         public:
             STMLowLevelTimer            tim2;
             STMLowLevelTimer            tim5;
             Timer                       timer;
             MessageBus                  messageBus;
-            BrainPadIO                  io;
+            MeowbitIO                   io;
             ZSPI                        spi;
-            //codal::_mbed::I2C           i2c;
+            SPIScreenIO                *screenIo;
+            ST7735                     *st7735;
 
-            Synthesizer synth0;
-            Synthesizer synth1;
-            Mixer mixer;
-            ZPWM pwm;
-
-            ZSingleWireSerial sws;
-        // JackRouter jackRouter;
 
             Button buttonUp;
             Button buttonDown;
             Button buttonLeft;
             Button buttonRight;
+            Button buttonA;
+            Button buttonB;
 
-            ZSingleWireSerial serialOut;
+#define MEOWBIT_BUZZER_FREQUENCY 22050
+            Synthesizer synth0;
+            Synthesizer synth1;
+            Mixer mixer;
+            MixerChannel *mixerc0;
+            MixerChannel *mixerc1;
+            ZPWM *dac;
 
             /**
              * Constructor.
              */
-            BrainPad();
+            Meowbit();
 
             /**
              * Post constructor initialisation method.
@@ -124,7 +127,7 @@ namespace codal
             virtual void idleCallback();
 
             /**
-             * Determine the time since this MicroBit was last reset.
+             * Determine the time since this Meowbit was last reset.
              *
              * @return The time since the last reset, in milliseconds.
              *
@@ -149,28 +152,26 @@ namespace codal
      *
      * @param milliseconds the amount of time, in ms, to wait for. This number cannot be negative.
      *
-     * @return MICROBIT_OK on success, MICROBIT_INVALID_PARAMETER milliseconds is less than zero.
-     *
      */
-    inline void BrainPad::sleep(uint32_t milliseconds)
+    inline void Meowbit::sleep(uint32_t milliseconds)
     {
         fiber_sleep(milliseconds);
     }
 
     /**
-     * Determine the time since this MicroBit was last reset.
+     * Determine the time since this Meowbit was last reset.
      *
      * @return The time since the last reset, in milliseconds.
      *
      * @note This will value overflow after 1.6 months.
      */
-    inline unsigned long BrainPad::systemTime()
+    inline unsigned long Meowbit::systemTime()
     {
         return system_timer_current_time();
     }
 }
 
-void brainpad_dmesg_flush();
+void meowbit_dmesg_flush();
 
 using namespace codal;
 
