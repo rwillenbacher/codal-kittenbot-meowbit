@@ -1,0 +1,19 @@
+{
+    "target": {
+        "branches": {},
+        "name": "codal-kittenbot-meowbit",
+        "url": "https://github.com/rwillenbacher/codal-kittenbot-meowbit",
+        "branch": "master",
+        "type": "git"
+    },
+    "definitions": {
+        "DEVICE_COMPONENT_COUNT": 64,
+        "DEVICE_DMESG_BUFFER_SIZE": 1024
+    },
+    "config": {
+        "DEVICE_COMPONENT_COUNT": 64,
+        "DEVICE_DMESG_BUFFER_SIZE": 1024
+    },
+    "application": "source",
+    "output_folder": "build"
+}

@@ -1,2 +1,3 @@
-# codal-stm32f401re
-Codal target for STM32F401RE
+# codal-kittenbot-meowbit
+Codal target for Meowbit Kittenbot
+
