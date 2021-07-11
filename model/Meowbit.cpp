@@ -51,8 +51,8 @@ Meowbit::Meowbit() :
     buttonRight( io.buttonRight, DEVICE_ID_BUTTON_RIGHT, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_LOW, PullMode::Up ),
     buttonA( io.buttonA, DEVICE_ID_BUTTON_A, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_LOW, PullMode::Up ),
     buttonB( io.buttonB, DEVICE_ID_BUTTON_B, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_LOW, PullMode::Up ),
-    synth0( MEOWBIT_BUZZER_FREQUENCY, true ),
-    synth1( MEOWBIT_BUZZER_FREQUENCY, true )
+    synth0( MEOWBIT_BUZZER_FREQUENCY, false ),
+    synth1( MEOWBIT_BUZZER_FREQUENCY, false )
 {
     // Clear our status
     status = 0;
@@ -124,15 +124,15 @@ int Meowbit::init()
     target_disable_irq();
 
     synth0.setSampleRate( dac->getSampleRate() );
-    synth0.setSampleRate( dac->getSampleRate() );
+    synth1.setSampleRate( dac->getSampleRate() );
     //synth0.setTone(Synthesizer::SineTone);
     //synth1.setTone(Synthesizer::SineTone);
     //synth0.setBufferSize( 512 );
     //synth1.setBufferSize( 512 );
     mixerc0 = mixer.addChannel(synth0.output);
     mixerc1 = mixer.addChannel(synth1.output);
-    mixerc0->isSigned = true;
-    mixerc1->isSigned = true;
+    mixerc0->isSigned = false;
+    mixerc1->isSigned = false;
 
     target_enable_irq();
 
